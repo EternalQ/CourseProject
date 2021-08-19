@@ -1,0 +1,44 @@
+﻿@model SigninViewModel
+@{
+    ViewData["Title"] = "Sign in";
+}
+
+<div class="conteiner">
+    <div class="m-auto form-wrap">
+
+        <form method="POST" asp-action="Signin" asp-controller="Account" asp-anti-forgery="true">
+            <h2 class="text-center">Sign In</h2>
+
+            <div class="row justify-content-around">
+                <a class="btn" asp-action="GoogleLogin">Google</a>
+                <a class="btn disabled" asp-action="FacebookLogin">Facebook</a>
+            </div>
+
+            <hr />
+
+            <div>
+                <div class="form-group">
+                    <label asp-for="Email">Enter Email</label>
+                    <input class="form-control" type="text" asp-for="Email" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password">Enter Password</label>
+                    <input class="form-control" asp-for="Password" />
+                </div>
+                <div class="form-group form-check">
+                    <input type="checkbox" asp-for="RememberMe"/>
+                    <label asp-for="RememberMe">Remember me?</label>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Sign in" class="signin btn btn-dark" />
+                </div>
+                <div class="signup-wrap">
+                    <span>No account?</span>
+                    <a class="btn btn-link" asp-action="Signup" asp-controller="Account" value="Registration"> Sign up</a>
+                </div>
+            </div>
+            <div class="validation" asp-validation-summary="ModelOnly"></div>
+
+        </form>
+    </div>
+</div>
