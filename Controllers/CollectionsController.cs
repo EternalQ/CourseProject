@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace CourseProject.Controllers
 {
-    public class HomeController : Controller
+    public class CollectionsController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<CollectionsController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public CollectionsController(ILogger<CollectionsController> logger)
         {
             _logger = logger;
         }

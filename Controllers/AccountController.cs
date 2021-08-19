@@ -116,7 +116,7 @@ namespace CourseProject.Controllers
             string[] userInfo = { info.Principal.FindFirst(ClaimTypes.Name).Value, info.Principal.FindFirst(ClaimTypes.Email).Value };
 
             string strresult = "";
-            foreach(string str in userInfo)
+            foreach (string str in userInfo)
             {
                 strresult += str + '\n';
             }
@@ -146,25 +146,49 @@ namespace CourseProject.Controllers
         }
         #endregion
 
-        #region FacebookAuth
-        public IActionResult FacebookLogin()
+        #region TwitterAuth
+        public IActionResult TwitterLogin()
         {
-            string redirectUrl = Url.Action("FacebookResponse", "Account");
-            var properties = signInManager.ConfigureExternalAuthenticationProperties("Facebook", redirectUrl);
-            return new ChallengeResult("Facebook", properties);
+            string redirectUrl = Url.Action("TwitterResponse", "Account");
+            var properties = signInManager.ConfigureExternalAuthenticationProperties("Twitter", redirectUrl);
+            return new ChallengeResult("Twitter", properties);
         }
 
-        public async Task<IActionResult> FacebookResponse()
+        public async Task<IActionResult> TwitterResponse()
         {
             ExternalLoginInfo info = await signInManager.GetExternalLoginInfoAsync();
             if (info == null)
                 return RedirectToAction("Signin");
 
             var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            else
+            {
+                string email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                var  user = await userManager.FindByEmailAsync(email);
+                if (user != null)
+                    await signInManager.SignInAsync(user, false);
+                else
+                {
+
+                }
+            }
+
             //example
             string[] userInfo = { info.Principal.FindFirst(ClaimTypes.Name).Value, info.Principal.FindFirst(ClaimTypes.Email).Value };
+
+            string strresult = "";
+            foreach (string str in userInfo)
+            {
+                strresult += str + '\n';
+            }
+            return Content(result.ToString());
             if (result.Succeeded)
-                return View(userInfo);
+                return Content(strresult);
             else
             {
                 User user = new User
@@ -180,8 +204,17 @@ namespace CourseProject.Controllers
                     if (identResult.Succeeded)
                     {
                         await signInManager.SignInAsync(user, false);
-                        return View(userInfo);
+                        return Content(strresult);
                     }
+                }
+                else
+                {
+                    string str = "";
+                    foreach (var error in identResult.Errors)
+                    {
+                        str += error.Description + '\n';
+                    }
+                    return Content(str);
                 }
                 return AccessDenied();
             }

@@ -8,6 +8,6 @@ namespace CourseProject.Models
 {
     public class User : IdentityUser
     {
-        public List<CustomCollection> Collections { get; set; }
+        public List<CustomCollection> Collections { get; set; } = new List<CustomCollection>();
     }
 }

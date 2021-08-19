@@ -5,6 +5,13 @@ using System.Threading.Tasks;
 
 namespace CourseProject.Models
 {
+    public class Comment
+    {
+        public int Id { get; set; }
+        public User User { get; set; }
+        public string Text { get; set; }
+    }
+
     public class CustomItem
     {
         public CustomItem() { }
@@ -13,6 +20,7 @@ namespace CourseProject.Models
             Id = id;
             Name = name;
             Tags = tags;
+            Comments = new List<Comment>();
         }
 
         public int Id { get; set; }
@@ -21,6 +29,8 @@ namespace CourseProject.Models
 
         public int CollectionId { get; set; }
         public CustomCollection Collection { get; set; }
+
+        public List<Comment> Comments { get; set; }
 
         public string Num1_name { get; set; }
         public string Num2_name { get; set; }

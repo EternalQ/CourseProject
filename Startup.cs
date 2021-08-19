@@ -53,10 +53,11 @@ namespace CourseProject
                     options.ClientId = "229330796939-dkinoofecil8n7qd82bfc38vtvhivl37.apps.googleusercontent.com";
                     options.ClientSecret = "3PP-w-zmwFBILHfKyisbWgjS";
                 })
-                .AddFacebook(options =>
+                .AddTwitter(options =>
                 {
-                    options.AppId = "976343063098919";
-                    options.AppSecret = "0b0b81a0d71c6c8343d582389c3e7fc4";
+                    options.ConsumerKey = "FBdaVVvatHM79Vt5IT40pGf2j";
+                    options.ConsumerSecret = "qwaiJXUfZzGTD8hI8lPV2xoVy7YYDVJYv3cQ1M5gJYKHBa61Pk";
+                    options.RetrieveUserDetails = true;
                 });
 
             services.AddControllersWithViews();
@@ -70,7 +71,7 @@ namespace CourseProject
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Collections/Error");
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
@@ -85,7 +86,7 @@ namespace CourseProject
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Collections}/{action=Index}/{id?}");
             });
         }
     }

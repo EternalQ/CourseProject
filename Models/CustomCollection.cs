@@ -10,7 +10,7 @@ namespace CourseProject.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public List<CustomCollection> CustomCollections { get; set; }
+        public List<CustomCollection> CustomCollections { get; set; } = new List<CustomCollection>();
     }
 
     public class CustomCollection
@@ -22,6 +22,7 @@ namespace CourseProject.Models
             Name = name;
             Descrip = descrip;
             ImageURL = imageURL;
+            Items = new List<CustomItem>();
         }
 
         public int Id { get; set; }

@@ -12,8 +12,10 @@ namespace CourseProject.Models
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<CustomCollection> CustomCollections { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         public DbSet<CustomItem> CustomItems { get; set; }
+        public DbSet<Subject> Subjects { get; set; }
+        public DbSet<CustomCollection> CustomCollections { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

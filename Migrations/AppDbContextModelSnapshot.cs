@@ -19,6 +19,31 @@ namespace CourseProject.Migrations
                 .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("CourseProject.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CustomItemId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomItemId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("CourseProject.Models.CustomCollection", b =>
                 {
                     b.Property<int>("Id")
@@ -220,7 +245,7 @@ namespace CourseProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subject");
+                    b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("CourseProject.Models.User", b =>
@@ -292,13 +317,13 @@ namespace CourseProject.Migrations
                         {
                             Id = "2de16b1e-6429-4b9d-a8a4-5e8c2af23fc7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9b473b00-a2fc-442a-a968-1bf09d3a8931",
+                            ConcurrencyStamp = "a8a534e9-8e3a-47c7-ba0d-e0ed7678bbf4",
                             Email = "admin@mail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEE/2ykNqUh04JUHIMoAszdJ/qmtKkzqVfPMrTynl9d3DTHf9XNKFAY/QjbPGh0+hmA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFISXn7Z52KZMVo3Vzhog8AnBaTJ+raQKL9u2It2AvJpH7Lx4pgDc0ltIf1EDyhInQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -336,7 +361,7 @@ namespace CourseProject.Migrations
                         new
                         {
                             Id = "7be31283-195b-4d9e-b225-18d39cf80b2b",
-                            ConcurrencyStamp = "4517bce6-30e1-4384-89a8-5650b434999d",
+                            ConcurrencyStamp = "57cb98e2-98a0-4298-b928-ee1bce87b024",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         });
@@ -453,6 +478,19 @@ namespace CourseProject.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("CourseProject.Models.Comment", b =>
+                {
+                    b.HasOne("CourseProject.Models.CustomItem", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("CustomItemId");
+
+                    b.HasOne("CourseProject.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CourseProject.Models.CustomCollection", b =>
                 {
                     b.HasOne("CourseProject.Models.Subject", "Subject")
@@ -533,6 +571,11 @@ namespace CourseProject.Migrations
             modelBuilder.Entity("CourseProject.Models.CustomCollection", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("CourseProject.Models.CustomItem", b =>
+                {
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("CourseProject.Models.Subject", b =>
