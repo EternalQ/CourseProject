@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using CourseProject.Models.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CourseProject.Models
 {
-    public class AppDbContext : IdentityDbContext<User>
+    public class AppDbContext : IdentityDbContext<IUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -28,7 +29,7 @@ namespace CourseProject.Models
                 NormalizedName = "ADMIN"
             });
 
-            builder.Entity<User>().HasData(new User
+            builder.Entity<IUser>().HasData(new IUser
             {
                 Id = "2de16b1e-6429-4b9d-a8a4-5e8c2af23fc7",
                 UserName = "admin",
@@ -36,7 +37,7 @@ namespace CourseProject.Models
                 Email = "admin@mail.com",
                 NormalizedEmail = "ADMIN@MAIL.COM",
                 EmailConfirmed = true,
-                PasswordHash = new PasswordHasher<User>().HashPassword(null, "admin"),
+                PasswordHash = new PasswordHasher<IUser>().HashPassword(null, "admin"),
                 SecurityStamp = string.Empty
             });
 

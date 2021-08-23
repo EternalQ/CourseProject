@@ -3,20 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CourseProject.Models
+namespace CourseProject.Models.Entities
 {
-    public class Subject
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-
-        public List<CustomCollection> CustomCollections { get; set; } = new List<CustomCollection>();
-    }
-
     public class CustomCollection
     {
 
-        public CustomCollection() { }
+        public CustomCollection() 
+        { 
+            Items = new List<CustomItem>();
+        }
+
         public CustomCollection(string name, string descrip, string imageURL)
         {
             Name = name;

@@ -1,4 +1,5 @@
 ﻿using CourseProject.Models;
+using CourseProject.Models.Entities;
 using CourseProject.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,15 +14,16 @@ namespace CourseProject.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<User> userManager;
-        private readonly SignInManager<User> signInManager;
+        private readonly UserManager<IUser> userManager;
+        private readonly SignInManager<IUser> signInManager;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserManager<IUser> userManager, SignInManager<IUser> signInManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
         }
 
+        #region Sign in/out
         [HttpGet]
         public IActionResult Signup()
         {
@@ -33,12 +35,12 @@ namespace CourseProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = new User() { Email = model.Email, UserName = model.Email };
+                IUser user = new IUser() { Email = model.Email, UserName = model.Email };
                 var result = await userManager.CreateAsync(user, model.PasswordConfirm);
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Collections");
                 }
                 else
                 {
@@ -72,7 +74,7 @@ namespace CourseProject.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Collections");
                     }
                 }
                 else
@@ -82,14 +84,13 @@ namespace CourseProject.Controllers
             }
             return View(model);
         }
+        #endregion
 
-        [HttpPost]
         [Authorize]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Collections");
         }
 
         public IActionResult AccessDenied()
@@ -122,10 +123,10 @@ namespace CourseProject.Controllers
             }
 
             if (result.Succeeded)
-                return Content(strresult);
+                return RedirectToAction("Index", "Account");
             else
             {
-                User user = new User
+                IUser user = new IUser
                 {
                     Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
                     UserName = info.Principal.FindFirst(ClaimTypes.Email).Value
@@ -191,7 +192,7 @@ namespace CourseProject.Controllers
                 return Content(strresult);
             else
             {
-                User user = new User
+                IUser user = new IUser
                 {
                     Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
                     UserName = info.Principal.FindFirst(ClaimTypes.Email).Value

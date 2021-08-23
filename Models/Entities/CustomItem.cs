@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CourseProject.Models
+namespace CourseProject.Models.Entities
 {
-    public class Comment
-    {
-        public int Id { get; set; }
-        public User User { get; set; }
-        public string Text { get; set; }
-    }
-
     public class CustomItem
     {
-        public CustomItem() { }
+        public CustomItem() 
+        {
+            Comments = new List<Comment>();
+        }
+
         public CustomItem(int id, string name, string tags)
         {
             Id = id;
@@ -26,6 +23,7 @@ namespace CourseProject.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Tags { get; set; }
+        public int Likes { get; set; }
 
         public int CollectionId { get; set; }
         public CustomCollection Collection { get; set; }
