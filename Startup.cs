@@ -32,7 +32,7 @@ namespace CourseProject
 
             services.AddIdentity<IUser, IdentityRole>(options =>
             {
-                options.User.RequireUniqueEmail = true;
+                options.User.RequireUniqueEmail = false;
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 6;
                 options.Password.RequireLowercase = false;

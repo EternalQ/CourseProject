@@ -23,6 +23,12 @@ namespace CourseProject.Controllers
             this.signInManager = signInManager;
         }
 
+        [Route("/Account/AccManager")]
+        public IActionResult AccountManager()
+        {
+            return View();
+        }
+
         #region Sign in/out
         [HttpGet]
         public IActionResult Signup()
@@ -123,7 +129,7 @@ namespace CourseProject.Controllers
             }
 
             if (result.Succeeded)
-                return RedirectToAction("Index", "Account");
+                return RedirectToAction("Index", "Collections");
             else
             {
                 IUser user = new IUser
@@ -171,54 +177,57 @@ namespace CourseProject.Controllers
             {
                 string email = info.Principal.FindFirstValue(ClaimTypes.Email);
                 var  user = await userManager.FindByEmailAsync(email);
+                return Content(user.Id);
                 if (user != null)
+                {
                     await signInManager.SignInAsync(user, false);
+                    return RedirectToAction("Index", "Collections");
+                }
                 else
                 {
-
                 }
             }
 
             //example
-            string[] userInfo = { info.Principal.FindFirst(ClaimTypes.Name).Value, info.Principal.FindFirst(ClaimTypes.Email).Value };
+            //string[] userInfo = { info.Principal.FindFirst(ClaimTypes.Name).Value, info.Principal.FindFirst(ClaimTypes.Email).Value };
 
-            string strresult = "";
-            foreach (string str in userInfo)
-            {
-                strresult += str + '\n';
-            }
-            return Content(result.ToString());
-            if (result.Succeeded)
-                return Content(strresult);
-            else
-            {
-                IUser user = new IUser
-                {
-                    Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
-                    UserName = info.Principal.FindFirst(ClaimTypes.Email).Value
-                };
+            //string strresult = "";
+            //foreach (string str in userInfo)
+            //{
+            //    strresult += str + '\n';
+            //}
+            //return Content(result.ToString());
+            //if (result.Succeeded)
+            //    return Content(strresult);
+            //else
+            //{
+            //    IUser user = new IUser
+            //    {
+            //        Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
+            //        UserName = info.Principal.FindFirst(ClaimTypes.Email).Value
+            //    };
 
-                IdentityResult identResult = await userManager.CreateAsync(user);
-                if (identResult.Succeeded)
-                {
-                    identResult = await userManager.AddLoginAsync(user, info);
-                    if (identResult.Succeeded)
-                    {
-                        await signInManager.SignInAsync(user, false);
-                        return Content(strresult);
-                    }
-                }
-                else
-                {
-                    string str = "";
-                    foreach (var error in identResult.Errors)
-                    {
-                        str += error.Description + '\n';
-                    }
-                    return Content(str);
-                }
-                return AccessDenied();
-            }
+            //    IdentityResult identResult = await userManager.CreateAsync(user);
+            //    if (identResult.Succeeded)
+            //    {
+            //        identResult = await userManager.AddLoginAsync(user, info);
+            //        if (identResult.Succeeded)
+            //        {
+            //            await signInManager.SignInAsync(user, false);
+            //            return Content(strresult);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        string str = "";
+            //        foreach (var error in identResult.Errors)
+            //        {
+            //            str += error.Description + '\n';
+            //        }
+            //        return Content(str);
+            //    }
+            //    return AccessDenied();
+            //}
         }
         #endregion
     }

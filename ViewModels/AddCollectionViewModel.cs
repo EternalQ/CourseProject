@@ -1,38 +1,21 @@
-﻿using System;
+﻿using CourseProject.Models;
+using CourseProject.Models.Entities;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CourseProject.Models.Entities
+namespace CourseProject.ViewModels
 {
-    public class CustomCollection
+    public class AddCollectionViewModel
     {
-
-        public CustomCollection() 
-        { 
-            Subject = new Subject();
-            Items = new List<CustomItem>();
-        }
-
-        public CustomCollection(string name, string descrip, string imageURL)
-        {
-            Name = name;
-            Descrip = descrip;
-            ImageURL = imageURL;
-            Subject = new Subject();
-            Items = new List<CustomItem>();
-        }
-
-        public int Id { get; set; }
         public string Name { get; set; }
-        public string Descrip { get; set; }
-        public string ImageURL { get; set; }
+        public string Description { get; set; }
+        public string Subject { get; set; }
+        public IFormFile File { get; set; }
 
-        public int SubjectId { get; set; }
-        public Subject Subject { get; set; }
-        public List<CustomItem> Items { get; set; }
-
-        //terrible...
         public string Num1_name { get; set; }
         public string Num2_name { get; set; }
         public string Num3_name { get; set; }

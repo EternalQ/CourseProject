@@ -114,3 +114,12 @@ input {
 .form-check input{
     display: inline;
 }
+
+.custom-file-input {
+    cursor: pointer;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+}
