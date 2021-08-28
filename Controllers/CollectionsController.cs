@@ -24,12 +24,14 @@ namespace CourseProject.Controllers
         private readonly ILogger<CollectionsController> _logger;
         private readonly AppDbContext db;
         private readonly UserManager<IUser> userMgr;
+        private readonly Cloudinary cloudinary;
 
         public CollectionsController(ILogger<CollectionsController> logger, AppDbContext db, UserManager<IUser> userMgr)
         {
             _logger = logger;
             this.db = db;
             this.userMgr = userMgr;
+            cloudinary = new Cloudinary(account);
         }
 
         [AllowAnonymous]
@@ -39,16 +41,17 @@ namespace CourseProject.Controllers
         }
 
         [Route("/Collections/ColManager")]
-        public IActionResult CollectionsManager()
+        public async Task<IActionResult> CollectionsManager()
         {
-            ViewBag.Collections = db.CustomCollections.Include(c => c.Items).ToList();
+            IUser user = await userMgr.FindByNameAsync(User.Identity.Name);
+            ViewBag.Collections = db.CustomCollections.Include(c => c.Items).Where(c=>c.UserId == user.Id).ToList();
+
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateCollection(AddCollectionViewModel model)
         {
-            Cloudinary cloudinary = new Cloudinary(account);
             IUser user = await userMgr.FindByNameAsync(User.Identity.Name);
 
             if (ModelState.IsValid)
@@ -56,7 +59,7 @@ namespace CourseProject.Controllers
                 var uploadParams = new ImageUploadParams()
                 {
                     File = new FileDescription($"{user.Id}-collection-{DateTime.Now.ToString("dd-MM-yyyy--HH-mm-ss")}", model.File.OpenReadStream()),
-                    Transformation = new Transformation().Width(245).Height(154)
+                    Transformation = new Transformation().Width(245).Height(154).Crop("fill2")
                 };
                 var uploadResult = await cloudinary.UploadAsync(uploadParams);
 
@@ -66,6 +69,7 @@ namespace CourseProject.Controllers
                     Descrip = model.Description,
                     Subject = await db.Subjects.FirstOrDefaultAsync(s => s.Name == model.Subject),
                     ImageURL = uploadResult.Url.AbsoluteUri,
+                    ImagePublicId = uploadResult.PublicId,
 
                     Check1_name = model.Check1_name,
                     Check2_name = model.Check2_name,
@@ -106,6 +110,34 @@ namespace CourseProject.Controllers
             else
                 ModelState.AddModelError("", "Smth went wrong");
                 return View("CollectionsManager", model);
+        }
+
+        public async Task<IActionResult> DeleteCollection(string id)
+        {
+            var user = await userMgr.FindByNameAsync(User.Identity.Name);
+            var collection = await db.CustomCollections.FirstOrDefaultAsync(c => c.Id == id);
+            if (user.Id != collection.UserId)
+            {
+                return RedirectToAction("AccessDenied", "Account");
+            }
+
+            db.CustomCollections.Remove(collection);
+            await db.SaveChangesAsync();
+            await cloudinary.DeleteResourcesAsync(collection.ImagePublicId);
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> EditItems(string id)
+        {
+            var user = await userMgr.FindByNameAsync(User.Identity.Name);
+            var collection = await db.CustomCollections.FirstOrDefaultAsync(c => c.Id == id);
+            if(user.Id != collection.UserId)
+            {
+                return RedirectToAction("AccessDenied", "Account");
+            }
+
+            return View(collection);
         }
 
         [AllowAnonymous]

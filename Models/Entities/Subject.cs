@@ -18,7 +18,7 @@ namespace CourseProject.Models.Entities
             CustomCollections = new List<CustomCollection>();
         }
 
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
 
         public List<CustomCollection> CustomCollections { get; set; }

@@ -9,25 +9,25 @@ namespace CourseProject.Models.Entities
     {
         public CustomItem() 
         {
+            Collection = new CustomCollection();
             Comments = new List<Comment>();
         }
 
-        public CustomItem(int id, string name, string tags)
+        public CustomItem(string name, string tags)
         {
-            Id = id;
             Name = name;
             Tags = tags;
+            Collection = new CustomCollection();
             Comments = new List<Comment>();
         }
 
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Tags { get; set; }
         public int Likes { get; set; }
 
-        public int CollectionId { get; set; }
+        public string CollectionId { get; set; }
         public CustomCollection Collection { get; set; }
-
         public List<Comment> Comments { get; set; }
 
         public int Num1 { get; set; }

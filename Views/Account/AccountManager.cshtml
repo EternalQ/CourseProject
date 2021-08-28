@@ -1,24 +1,24 @@
 ﻿@{
     ViewData["Title"] = "Account";
 }
-
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <button class="nav-link active">Account</button>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-action="ColManager" asp-controller="Collections">Collections</a>
-    </li>
-</ul>
-<div>
+<div class="col-9">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <button class="nav-link active">Account</button>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-action="ColManager" asp-controller="Collections">Collections</a>
+        </li>
+    </ul>
     <div>
-        <h2 class="h4 mt-3 mb-3">Account manager</h2>
-        @* managment *@
+        <div>
+            <h2 class="h4 mt-3 mb-3">Account manager</h2>
+            @* managment *@
+        </div>
     </div>
 </div>
-
 @section Scripts {
-    <script>
-        
-    </script>
+<script>
+
+</script>
 }

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseProject.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210825134521_RemoveNameFields")]
-    partial class RemoveNameFields
+    [Migration("20210826203456_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,13 +23,14 @@ namespace CourseProject.Migrations
 
             modelBuilder.Entity("CourseProject.Models.Entities.Comment", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("CustomItemId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("AddingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomItemId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
@@ -48,10 +49,8 @@ namespace CourseProject.Migrations
 
             modelBuilder.Entity("CourseProject.Models.Entities.CustomCollection", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Check1_name")
                         .HasColumnType("nvarchar(max)");
@@ -91,9 +90,6 @@ namespace CourseProject.Migrations
 
                     b.Property<string>("Descrip")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IUserId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ImageURL")
                         .HasColumnType("nvarchar(max)");
@@ -137,8 +133,8 @@ namespace CourseProject.Migrations
                     b.Property<bool>("Str3_visibility")
                         .HasColumnType("bit");
 
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("int");
+                    b.Property<string>("SubjectId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Txt1_name")
                         .HasColumnType("nvarchar(max)");
@@ -158,21 +154,22 @@ namespace CourseProject.Migrations
                     b.Property<bool>("Txt3_visibility")
                         .HasColumnType("bit");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("IUserId");
-
                     b.HasIndex("SubjectId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("CustomCollections");
                 });
 
             modelBuilder.Entity("CourseProject.Models.Entities.CustomItem", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("Check1")
                         .HasColumnType("bit");
@@ -183,8 +180,8 @@ namespace CourseProject.Migrations
                     b.Property<bool>("Check3")
                         .HasColumnType("bit");
 
-                    b.Property<int>("CollectionId")
-                        .HasColumnType("int");
+                    b.Property<string>("CollectionId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Date1")
                         .HasColumnType("datetime2");
@@ -307,13 +304,13 @@ namespace CourseProject.Migrations
                         {
                             Id = "2de16b1e-6429-4b9d-a8a4-5e8c2af23fc7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a9a95ad3-8f11-4bc2-bd0e-1afe2c522532",
+                            ConcurrencyStamp = "3df72b0f-1baa-4369-aee5-647f386a2c5c",
                             Email = "admin@mail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPT/ZITziPWljXYcwepVooOklPYZ222BctBhlYFSWyT5pL0Oz93tW/wUl/InOmlSYg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPf6JAT8Qky+9ENDa5YzuNXAHdtS1u9DfJn3FNaV71QfTgmqsRw7qFdRVPhouV8X5g==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -321,12 +318,26 @@ namespace CourseProject.Migrations
                         });
                 });
 
+            modelBuilder.Entity("CourseProject.Models.Entities.ItemLikes", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ItemId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ItemLikes");
+                });
+
             modelBuilder.Entity("CourseProject.Models.Entities.Subject", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -334,6 +345,33 @@ namespace CourseProject.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Subjects");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "50b3ca6b-f3fb-417a-8814-a21d3b2ed44a",
+                            Name = "Books"
+                        },
+                        new
+                        {
+                            Id = "bb00ad70-c777-450e-a691-4879ca3dd265",
+                            Name = "Watches"
+                        },
+                        new
+                        {
+                            Id = "6797d70b-1ab6-4124-80de-f58ed1de95be",
+                            Name = "Flora"
+                        },
+                        new
+                        {
+                            Id = "6028d62e-58ec-4d74-a2bf-732992497307",
+                            Name = "Fauna"
+                        },
+                        new
+                        {
+                            Id = "94e6c7e6-a59c-4589-bd27-f88c6c94831a",
+                            Name = "Custom"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -366,7 +404,7 @@ namespace CourseProject.Migrations
                         new
                         {
                             Id = "7be31283-195b-4d9e-b225-18d39cf80b2b",
-                            ConcurrencyStamp = "edd87191-7e9d-4f69-bdd8-c59c88832a42",
+                            ConcurrencyStamp = "e412e6ab-482e-43c5-903c-abda22735669",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         });
@@ -498,26 +536,24 @@ namespace CourseProject.Migrations
 
             modelBuilder.Entity("CourseProject.Models.Entities.CustomCollection", b =>
                 {
-                    b.HasOne("CourseProject.Models.Entities.IUser", null)
-                        .WithMany("Collections")
-                        .HasForeignKey("IUserId");
-
                     b.HasOne("CourseProject.Models.Entities.Subject", "Subject")
                         .WithMany("CustomCollections")
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SubjectId");
+
+                    b.HasOne("CourseProject.Models.Entities.IUser", "User")
+                        .WithMany("Collections")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Subject");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CourseProject.Models.Entities.CustomItem", b =>
                 {
                     b.HasOne("CourseProject.Models.Entities.CustomCollection", "Collection")
                         .WithMany("Items")
-                        .HasForeignKey("CollectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CollectionId");
 
                     b.Navigation("Collection");
                 });

@@ -11,9 +11,12 @@ namespace CourseProject.ViewModels
 {
     public class AddCollectionViewModel
     {
+        [Required]
         public string Name { get; set; }
         public string Description { get; set; }
+        [Required]
         public string Subject { get; set; }
+        [Required]
         public IFormFile File { get; set; }
 
         public string Num1_name { get; set; }

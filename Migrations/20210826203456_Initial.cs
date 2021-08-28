@@ -47,16 +47,28 @@ namespace CourseProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Subject",
+                name: "ItemLikes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ItemId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ItemLikes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Subjects",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Subject", x => x.Id);
+                    table.PrimaryKey("PK_Subjects", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -169,28 +181,42 @@ namespace CourseProject.Migrations
                 name: "CustomCollections",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Descrip = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImageURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SubjectId = table.Column<int>(type: "int", nullable: false),
+                    SubjectId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Num1_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Num2_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Num3_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Num1_visibility = table.Column<bool>(type: "bit", nullable: false),
                     Num2_visibility = table.Column<bool>(type: "bit", nullable: false),
                     Num3_visibility = table.Column<bool>(type: "bit", nullable: false),
+                    Str1_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Str2_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Str3_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Str1_visibility = table.Column<bool>(type: "bit", nullable: false),
                     Str2_visibility = table.Column<bool>(type: "bit", nullable: false),
                     Str3_visibility = table.Column<bool>(type: "bit", nullable: false),
+                    Txt1_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Txt2_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Txt3_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Txt1_visibility = table.Column<bool>(type: "bit", nullable: false),
                     Txt2_visibility = table.Column<bool>(type: "bit", nullable: false),
                     Txt3_visibility = table.Column<bool>(type: "bit", nullable: false),
+                    Date1_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Date2_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Date3_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Date1_visibility = table.Column<bool>(type: "bit", nullable: false),
                     Date2_visibility = table.Column<bool>(type: "bit", nullable: false),
                     Date3_visibility = table.Column<bool>(type: "bit", nullable: false),
+                    Check1_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Check2_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Check3_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Check1_visibility = table.Column<bool>(type: "bit", nullable: false),
                     Check2_visibility = table.Column<bool>(type: "bit", nullable: false),
-                    Check3_visibility = table.Column<bool>(type: "bit", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    Check3_visibility = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -202,49 +228,34 @@ namespace CourseProject.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_CustomCollections_Subject_SubjectId",
+                        name: "FK_CustomCollections_Subjects_SubjectId",
                         column: x => x.SubjectId,
-                        principalTable: "Subject",
+                        principalTable: "Subjects",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "CustomItems",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Tags = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CollectionId = table.Column<int>(type: "int", nullable: false),
-                    Num1_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Num2_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Num3_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Likes = table.Column<int>(type: "int", nullable: false),
+                    CollectionId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Num1 = table.Column<int>(type: "int", nullable: false),
                     Num2 = table.Column<int>(type: "int", nullable: false),
                     Num3 = table.Column<int>(type: "int", nullable: false),
-                    Str1_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Str2_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Str3_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Str1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Str2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Str3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Txt1_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Txt2_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Txt3_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Txt1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Txt2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Txt3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Date1_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Date2_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Date3_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Date1 = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Date2 = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Date3 = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Check1_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Check2_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Check3_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Check1 = table.Column<bool>(type: "bit", nullable: false),
                     Check2 = table.Column<bool>(type: "bit", nullable: false),
                     Check3 = table.Column<bool>(type: "bit", nullable: false)
@@ -257,18 +268,57 @@ namespace CourseProject.Migrations
                         column: x => x.CollectionId,
                         principalTable: "CustomCollections",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AddingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CustomItemId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Comments_CustomItems_CustomItemId",
+                        column: x => x.CustomItemId,
+                        principalTable: "CustomItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "7be31283-195b-4d9e-b225-18d39cf80b2b", "bfa6968c-17a1-43db-9703-4ef8d3bb05c7", "admin", "ADMIN" });
+                values: new object[] { "7be31283-195b-4d9e-b225-18d39cf80b2b", "e412e6ab-482e-43c5-903c-abda22735669", "admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "2de16b1e-6429-4b9d-a8a4-5e8c2af23fc7", 0, "3dec69bd-f347-4985-94e1-797bae415360", "admin@mail.com", true, false, null, "ADMIN@MAIL.COM", "ADMIN", "AQAAAAEAACcQAAAAEF/ZnD7cz4otEi6FiIeVDUr2jIsm1R19DqD9DNBCbw5npt0hQWwqkxTOqrpU7xwtYQ==", null, false, "", false, "admin" });
+                values: new object[] { "2de16b1e-6429-4b9d-a8a4-5e8c2af23fc7", 0, "3df72b0f-1baa-4369-aee5-647f386a2c5c", "admin@mail.com", true, false, null, "ADMIN@MAIL.COM", "ADMIN", "AQAAAAEAACcQAAAAEPf6JAT8Qky+9ENDa5YzuNXAHdtS1u9DfJn3FNaV71QfTgmqsRw7qFdRVPhouV8X5g==", null, false, "", false, "admin" });
+
+            migrationBuilder.InsertData(
+                table: "Subjects",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { "50b3ca6b-f3fb-417a-8814-a21d3b2ed44a", "Books" },
+                    { "bb00ad70-c777-450e-a691-4879ca3dd265", "Watches" },
+                    { "6797d70b-1ab6-4124-80de-f58ed1de95be", "Flora" },
+                    { "6028d62e-58ec-4d74-a2bf-732992497307", "Fauna" },
+                    { "94e6c7e6-a59c-4589-bd27-f88c6c94831a", "Custom" }
+                });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -315,6 +365,16 @@ namespace CourseProject.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comments_CustomItemId",
+                table: "Comments",
+                column: "CustomItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_UserId",
+                table: "Comments",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CustomCollections_SubjectId",
                 table: "CustomCollections",
                 column: "SubjectId");
@@ -348,10 +408,16 @@ namespace CourseProject.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CustomItems");
+                name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "ItemLikes");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "CustomItems");
 
             migrationBuilder.DropTable(
                 name: "CustomCollections");
@@ -360,7 +426,7 @@ namespace CourseProject.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Subject");
+                name: "Subjects");
         }
     }
 }

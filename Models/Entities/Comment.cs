@@ -8,14 +8,17 @@ namespace CourseProject.Models.Entities
     public class Comment
     {
         public Comment() { }
-        public Comment(IUser user, string text)
+        public Comment(string text)
         {
-            User = user;
             Text = text;
+            AddingDate = DateTime.Now;
         }
 
-        public int Id { get; set; }
-        public IUser User { get; set; }
+        public string Id { get; set; }
         public string Text { get; set; }
+        public DateTime AddingDate { get; set; }
+
+        public string UserId { get; set; }
+        public IUser User { get; set; }
     }
 }

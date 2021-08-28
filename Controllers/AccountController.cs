@@ -23,6 +23,7 @@ namespace CourseProject.Controllers
             this.signInManager = signInManager;
         }
 
+        [Authorize]
         [Route("/Account/AccManager")]
         public IActionResult AccountManager()
         {
@@ -104,64 +105,22 @@ namespace CourseProject.Controllers
             return View();
         }
 
-        #region GoogleAuth
+        #region ExternalAuth
         public IActionResult GoogleLogin()
         {
-            string redirectUrl = Url.Action("GoogleResponse", "Account");
+            string redirectUrl = Url.Action("ExternalLoginResponse", "Account");
             var properties = signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
             return new ChallengeResult("Google", properties);
         }
 
-        public async Task<IActionResult> GoogleResponse()
-        {
-            ExternalLoginInfo info = await signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
-                return RedirectToAction("Signin");
-
-            var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
-            //example
-            string[] userInfo = { info.Principal.FindFirst(ClaimTypes.Name).Value, info.Principal.FindFirst(ClaimTypes.Email).Value };
-
-            string strresult = "";
-            foreach (string str in userInfo)
-            {
-                strresult += str + '\n';
-            }
-
-            if (result.Succeeded)
-                return RedirectToAction("Index", "Collections");
-            else
-            {
-                IUser user = new IUser
-                {
-                    Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
-                    UserName = info.Principal.FindFirst(ClaimTypes.Email).Value
-                };
-
-                IdentityResult identResult = await userManager.CreateAsync(user);
-                if (identResult.Succeeded)
-                {
-                    identResult = await userManager.AddLoginAsync(user, info);
-                    if (identResult.Succeeded)
-                    {
-                        await signInManager.SignInAsync(user, false);
-                        return Content(strresult);
-                    }
-                }
-                return AccessDenied();
-            }
-        }
-        #endregion
-
-        #region TwitterAuth
         public IActionResult TwitterLogin()
         {
-            string redirectUrl = Url.Action("TwitterResponse", "Account");
+            string redirectUrl = Url.Action("ExternalLoginResponse", "Account");
             var properties = signInManager.ConfigureExternalAuthenticationProperties("Twitter", redirectUrl);
             return new ChallengeResult("Twitter", properties);
         }
 
-        public async Task<IActionResult> TwitterResponse()
+        public async Task<IActionResult> ExternalLoginResponse()
         {
             ExternalLoginInfo info = await signInManager.GetExternalLoginInfoAsync();
             if (info == null)
@@ -171,63 +130,32 @@ namespace CourseProject.Controllers
 
             if (result.Succeeded)
             {
-                return Ok();
+                return RedirectToAction("Index", "Collections");
             }
             else
             {
                 string email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                var  user = await userManager.FindByEmailAsync(email);
-                return Content(user.Id);
-                if (user != null)
+                var user = await userManager.FindByEmailAsync(email);
+
+                if (user == null)
+                {
+                    user = new IUser()
+                    {
+                        Email = email,
+                        UserName = email
+                    };
+                    await userManager.CreateAsync(user);
+                }
+
+                var resultAddLogin = await userManager.AddLoginAsync(user, info);
+                if (resultAddLogin.Succeeded)
                 {
                     await signInManager.SignInAsync(user, false);
                     return RedirectToAction("Index", "Collections");
                 }
                 else
-                {
-                }
+                    return Content("Error");
             }
-
-            //example
-            //string[] userInfo = { info.Principal.FindFirst(ClaimTypes.Name).Value, info.Principal.FindFirst(ClaimTypes.Email).Value };
-
-            //string strresult = "";
-            //foreach (string str in userInfo)
-            //{
-            //    strresult += str + '\n';
-            //}
-            //return Content(result.ToString());
-            //if (result.Succeeded)
-            //    return Content(strresult);
-            //else
-            //{
-            //    IUser user = new IUser
-            //    {
-            //        Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
-            //        UserName = info.Principal.FindFirst(ClaimTypes.Email).Value
-            //    };
-
-            //    IdentityResult identResult = await userManager.CreateAsync(user);
-            //    if (identResult.Succeeded)
-            //    {
-            //        identResult = await userManager.AddLoginAsync(user, info);
-            //        if (identResult.Succeeded)
-            //        {
-            //            await signInManager.SignInAsync(user, false);
-            //            return Content(strresult);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        string str = "";
-            //        foreach (var error in identResult.Errors)
-            //        {
-            //            str += error.Description + '\n';
-            //        }
-            //        return Content(str);
-            //    }
-            //    return AccessDenied();
-            //}
         }
         #endregion
     }
