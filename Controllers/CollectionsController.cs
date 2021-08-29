@@ -44,7 +44,7 @@ namespace CourseProject.Controllers
         public async Task<IActionResult> CollectionsManager()
         {
             IUser user = await userMgr.FindByNameAsync(User.Identity.Name);
-            ViewBag.Collections = db.CustomCollections.Include(c => c.Items).Where(c=>c.UserId == user.Id).ToList();
+            ViewBag.Collections = db.CustomCollections.Include(c => c.Items).Where(c => c.UserId == user.Id).ToList();
 
             return View();
         }
@@ -58,8 +58,8 @@ namespace CourseProject.Controllers
             {
                 var uploadParams = new ImageUploadParams()
                 {
-                    File = new FileDescription($"{user.Id}-collection-{DateTime.Now.ToString("dd-MM-yyyy--HH-mm-ss")}", model.File.OpenReadStream()),
-                    Transformation = new Transformation().Width(245).Height(154).Crop("fill2")
+                    File = new FileDescription($"{user.Id}-{DateTime.Now.ToString("dd-MM-yyyy--HH-mm-ss")}", model.File.OpenReadStream()),
+                    Transformation = new Transformation().Width(245).Height(154).Crop("fill")
                 };
                 var uploadResult = await cloudinary.UploadAsync(uploadParams);
 
@@ -105,11 +105,11 @@ namespace CourseProject.Controllers
 
                 user.Collections.Add(collection);
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("CollectionsManager");
             }
             else
                 ModelState.AddModelError("", "Smth went wrong");
-                return View("CollectionsManager", model);
+            return View("CollectionsManager", model);
         }
 
         public async Task<IActionResult> DeleteCollection(string id)
@@ -125,19 +125,85 @@ namespace CourseProject.Controllers
             await db.SaveChangesAsync();
             await cloudinary.DeleteResourcesAsync(collection.ImagePublicId);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("CollectionsManager");
         }
 
-        public async Task<IActionResult> EditItems(string id)
+        public async Task<IActionResult> EditCollection(string id)
         {
             var user = await userMgr.FindByNameAsync(User.Identity.Name);
-            var collection = await db.CustomCollections.FirstOrDefaultAsync(c => c.Id == id);
-            if(user.Id != collection.UserId)
+            var collection = await db.CustomCollections.Include(c => c.Items).SingleOrDefaultAsync(c => c.Id == id);
+            if (user.Id != collection.UserId)
             {
                 return RedirectToAction("AccessDenied", "Account");
             }
 
-            return View(collection);
+            ViewBag.Collection = collection;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditCollection(EditCollectionViewModel model)
+        {
+            IUser user = await userMgr.FindByNameAsync(User.Identity.Name);
+            
+            if (ModelState.IsValid)
+            {
+                CustomCollection collection = await db.CustomCollections.FirstOrDefaultAsync(c => c.Id == model.CollId);
+                collection.Name = model.CollectionName;
+                collection.Descrip = model.Description;
+                collection.Subject = await db.Subjects.FirstOrDefaultAsync(s => s.Name == model.Subject);
+
+                collection.Check1_name = model.Check1_name;
+                collection.Check2_name = model.Check2_name;
+                collection.Check3_name = model.Check3_name;
+                collection.Check1_visibility = model.Check1_visibility;
+                collection.Check2_visibility = model.Check2_visibility;
+                collection.Check3_visibility = model.Check3_visibility;
+                collection.Date1_name = model.Date1_name;
+                collection.Date2_name = model.Date2_name;
+                collection.Date3_name = model.Date3_name;
+                collection.Date1_visibility = model.Date1_visibility;
+                collection.Date2_visibility = model.Date2_visibility;
+                collection.Date3_visibility = model.Date3_visibility;
+                collection.Num1_name = model.Num1_name;
+                collection.Num2_name = model.Num2_name;
+                collection.Num3_name = model.Num3_name;
+                collection.Num1_visibility = model.Num1_visibility;
+                collection.Num2_visibility = model.Num2_visibility;
+                collection.Num3_visibility = model.Num3_visibility;
+                collection.Str1_name = model.Str1_name;
+                collection.Str2_name = model.Str2_name;
+                collection.Str3_name = model.Str3_name;
+                collection.Str1_visibility = model.Str1_visibility;
+                collection.Str2_visibility = model.Str2_visibility;
+                collection.Str3_visibility = model.Str3_visibility;
+                collection.Txt1_name = model.Txt1_name;
+                collection.Txt2_name = model.Txt2_name;
+                collection.Txt3_name = model.Txt3_name;
+                collection.Txt1_visibility = model.Txt1_visibility;
+                collection.Txt2_visibility = model.Txt2_visibility;
+                collection.Txt3_visibility = model.Txt3_visibility;
+
+                if (model.File != null)
+                {
+                    var uploadParams = new ImageUploadParams()
+                    {
+                        File = new FileDescription($"{user.Id}-{DateTime.Now.ToString("dd-MM-yyyy--HH-mm-ss")}", model.File.OpenReadStream()),
+                        Transformation = new Transformation().Width(245).Height(154).Crop("fill")
+                    };
+                    var uploadResult = await cloudinary.UploadAsync(uploadParams);
+                    cloudinary.DeleteResources(collection.ImagePublicId);
+                    collection.ImagePublicId = uploadResult.PublicId;
+                    collection.ImageURL = uploadResult.Url.AbsoluteUri;
+                }
+
+                await db.SaveChangesAsync();
+                return RedirectToAction("EditCollection", (object)model.CollId);
+            }
+            else
+                ModelState.AddModelError("", "Smth went wrong");
+            return View(model);
         }
 
         [AllowAnonymous]

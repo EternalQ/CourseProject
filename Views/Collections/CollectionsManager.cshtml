@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Account";
     var db = ViewBag.Context as AppDbContext;
+    var colls = ViewBag.Collections as List<CustomCollection>;
 }
 
 <div class="col-9">
@@ -264,8 +265,15 @@
                 </div>
             </div>
 
+            @if (colls.Count() == 0)
+            {
+                <div class="empty my-5 text-center">
+                    <h4>You haven't created a collection yet.</h4>
+                    <p>Click <strong>Add Collection</strong> to create new one.</p>
+                </div>
+            }
             <div class="row row-cols-1 row-cols-md-3">
-                @foreach (CustomCollection collection in ViewBag.Collections)
+                @foreach (var collection in colls)
                 {
                     <div class="col mb-4">
                         <div class="card">
@@ -278,12 +286,10 @@
                                 </p>
                             </div>
                             <div class="card-body">
-                                @Html.ActionLink("Items", "EditItems", "Collections", new {collection.Id}, new
+                                @Html.ActionLink("Edit", "EditCollection", "Collections", new {collection.Id}, new
                             {@class="btn btn-primary"})
                                 @Html.ActionLink("Delete", "DeleteCollection", "Collections", new {collection.Id}, new
                             {@class="btn btn-danger"})
-                                @* <a asp-action="EditCollection" asp-controller="Collections" class="btn btn-primary"></a>
-                                *@
                             </div>
                         </div>
                     </div>
@@ -293,7 +299,6 @@
     </div>
 </div>
 
-
 @section Scripts {
 <script>
     var simplemde = new SimpleMDE({ element: $('#descripArea')[0] });
@@ -301,10 +306,6 @@
     simplemde.codemirror.on("change", function () {
         $('#descripArea').val(simplemde.value());
     });
-
-    $('#fileInp').on("change", function () {
-        $('#fileInpLabel').html($('#fileInp').val().split('\\').pop())
-    })
 
     $('.fieldVisib').on("change", function () {
         if (this.checked)

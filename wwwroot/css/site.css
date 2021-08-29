@@ -133,3 +133,7 @@ main {
     display: flex;
     justify-content: center;
 }
+
+.CodeMirror {
+	height: 250px;
+}

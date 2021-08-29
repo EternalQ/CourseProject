@@ -1,0 +1,481 @@
+﻿@model EditCollectionViewModel
+@{
+    var db = ViewBag.Context as AppDbContext;
+    var coll = ViewBag.Collection as CustomCollection;
+}
+
+<div class="col-9">
+    <div class="collection-edit">
+        <form enctype="multipart/form-data" method="post" asp-action="EditCollection" asp-controller="Collections"
+              class="needs-validation" novalidate>
+            <div class="form-body">
+
+                <div class="mb-3">
+                    <input hidden type="text" asp-for="CollId" value="@coll.Id">
+                    <label class="form-label" asp-for="CollectionName">Enter collection name:</label>
+                    <input value="@coll.Name" required class="form-control" type="text" asp-for="CollectionName"
+                           placeholder="Name example">
+                </div>
+
+                <div class="form-grop">
+                    <label class="form-label" asp-for="Description">Write some description here:</label>
+                    <textarea class="form-control" id="descripArea" rows="3" placeholder="Collection desctiption..."
+                              asp-for="Description"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Subject">Choose collection subject</label>
+                    <select required class="form-control" asp-for="Subject">
+                        @foreach (var subject in db.Subjects.ToList())
+                        {
+                            @if (coll.SubjectId == subject.Id)
+                            {
+                                <option value="@subject.Name" selected>@subject.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@subject.Name">@subject.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="File" id="fileInpLabel">
+                            Drop file here or click to upload new
+                            image
+                        </label>
+                        <input accept="image/png, image/jpeg, image/jpg" class="form-control" type="file"
+                               asp-for="File" id="fileInp">
+                    </div>
+                </div>
+
+                <hr>
+
+                <h4>Additional fields for items</h4>
+                <h5>Number fields</h5>
+                <div class="fields-group row">
+                    <div class="mb-3 col-4">
+                        @if (coll.Num1_visibility)
+                        {
+                            <div class="form-check">
+                                <input checked class="form-check-input fieldVisib" type="checkbox"
+                                       asp-for="Num1_visibility">
+                                <label class="form-check-label" asp-for="Num1_visibility">Field 1</label>
+                            </div>
+                            <input required value="@coll.Num1_name" class="form-control" type="text" asp-for="Num1_name"
+                                   placeholder="Field name">
+                        }
+                        else
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input fieldVisib" type="checkbox" asp-for="Num1_visibility">
+                                <label class="form-check-label" asp-for="Num1_visibility">Field 1</label>
+                            </div>
+                            <input required value="@coll.Num1_name" class="form-control" type="text" asp-for="Num1_name"
+                                   placeholder="Field name" disabled>
+                        }
+                    </div>
+
+                    <div class="mb-3 col-4">
+                        @if (coll.Num2_visibility)
+                        {
+                            <div class="form-check">
+                                <input checked class="form-check-input fieldVisib" type="checkbox"
+                                       asp-for="Num2_visibility">
+                                <label class="form-check-label" asp-for="Num2_visibility">Field 2</label>
+                            </div>
+                            <input required value="@coll.Num2_name" class="form-control" type="text" asp-for="Num2_name"
+                                   placeholder="Field name">
+                        }
+                        else
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input fieldVisib" type="checkbox" asp-for="Num2_visibility">
+                                <label class="form-check-label" asp-for="Num2_visibility">Field 2</label>
+                            </div>
+                            <input required value="@coll.Num2_name" class="form-control" type="text" asp-for="Num2_name"
+                                   placeholder="Field name" disabled>
+                        }
+                    </div>
+
+                    <div class="mb-3 col-4">
+                        @if (coll.Num3_visibility)
+                        {
+                            <div class="form-check">
+                                <input checked class="form-check-input fieldVisib" type="checkbox"
+                                       asp-for="Num3_visibility">
+                                <label class="form-check-label" asp-for="Num3_visibility">Field 3</label>
+                            </div>
+                            <input required value="@coll.Num3_name" class="form-control" type="text" asp-for="Num3_name"
+                                   placeholder="Field name">
+                        }
+                        else
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input fieldVisib" type="checkbox" asp-for="Num3_visibility">
+                                <label class="form-check-label" asp-for="Num3_visibility">Field 3</label>
+                            </div>
+                            <input required value="@coll.Num3_name" class="form-control" type="text" asp-for="Num3_name"
+                                   placeholder="Field name" disabled>
+                        }
+                    </div>
+                </div>
+
+                <h5>String fields</h5>
+                <div class="fields-group row">
+                    <div class="mb-3 col-4">
+                        @if (coll.Str1_visibility)
+                        {
+                            <div class="form-check">
+                                <input checked class="form-check-input fieldVisib" type="checkbox"
+                                       asp-for="Str1_visibility">
+                                <label class="form-check-label" asp-for="Str1_visibility">Field 1</label>
+                            </div>
+                            <input required value="@coll.Str1_name" class="form-control" type="text" asp-for="Str1_name"
+                                   placeholder="Field name">
+                        }
+                        else
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input fieldVisib" type="checkbox" asp-for="Str1_visibility">
+                                <label class="form-check-label" asp-for="Str1_visibility">Field 1</label>
+                            </div>
+                            <input required value="@coll.Str1_name" class="form-control" type="text" asp-for="Str1_name"
+                                   placeholder="Field name" disabled>
+                        }
+                    </div>
+
+                    <div class="mb-3 col-4">
+                        @if (coll.Str2_visibility)
+                        {
+                            <div class="form-check">
+                                <input checked class="form-check-input fieldVisib" type="checkbox"
+                                       asp-for="Str2_visibility">
+                                <label class="form-check-label" asp-for="Str2_visibility">Field 2</label>
+                            </div>
+                            <input required value="@coll.Str2_name" class="form-control" type="text" asp-for="Str2_name"
+                                   placeholder="Field name">
+                        }
+                        else
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input fieldVisib" type="checkbox" asp-for="Str2_visibility">
+                                <label class="form-check-label" asp-for="Str2_visibility">Field 2</label>
+                            </div>
+                            <input required value="@coll.Str2_name" class="form-control" type="text" asp-for="Str2_name"
+                                   placeholder="Field name" disabled>
+                        }
+                    </div>
+
+                    <div class="mb-3 col-4">
+                        @if (coll.Str3_visibility)
+                        {
+                            <div class="form-check">
+                                <input checked class="form-check-input fieldVisib" type="checkbox"
+                                       asp-for="Str3_visibility">
+                                <label class="form-check-label" asp-for="Str3_visibility">Field 3</label>
+                            </div>
+                            <input required value="@coll.Str3_name" class="form-control" type="text" asp-for="Str3_name"
+                                   placeholder="Field name">
+                        }
+                        else
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input fieldVisib" type="checkbox" asp-for="Str3_visibility">
+                                <label class="form-check-label" asp-for="Str3_visibility">Field 3</label>
+                            </div>
+                            <input required value="@coll.Str3_name" class="form-control" type="text" asp-for="Str3_name"
+                                   placeholder="Field name" disabled>
+                        }
+                    </div>
+                </div>
+
+                <h5>Textarea fields</h5>
+                <div class="fields-group row">
+                    <div class="mb-3 col-4">
+                        @if (coll.Txt1_visibility)
+                        {
+                            <div class="form-check">
+                                <input checked class="form-check-input fieldVisib" type="checkbox"
+                                       asp-for="Txt1_visibility">
+                                <label class="form-check-label" asp-for="Txt1_visibility">Field 1</label>
+                            </div>
+                            <input required value="@coll.Txt1_name" class="form-control" type="text" asp-for="Txt1_name"
+                                   placeholder="Field name">
+                        }
+                        else
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input fieldVisib" type="checkbox" asp-for="Txt1_visibility">
+                                <label class="form-check-label" asp-for="Txt1_visibility">Field 1</label>
+                            </div>
+                            <input required value="@coll.Txt1_name" class="form-control" type="text" asp-for="Txt1_name"
+                                   placeholder="Field name" disabled>
+                        }
+                    </div>
+
+                    <div class="mb-3 col-4">
+                        @if (coll.Txt2_visibility)
+                        {
+                            <div class="form-check">
+                                <input checked class="form-check-input fieldVisib" type="checkbox"
+                                       asp-for="Txt2_visibility">
+                                <label class="form-check-label" asp-for="Txt2_visibility">Field 2</label>
+                            </div>
+                            <input required value="@coll.Txt2_name" class="form-control" type="text" asp-for="Txt2_name"
+                                   placeholder="Field name">
+                        }
+                        else
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input fieldVisib" type="checkbox" asp-for="Txt2_visibility">
+                                <label class="form-check-label" asp-for="Txt2_visibility">Field 2</label>
+                            </div>
+                            <input required value="@coll.Txt2_name" class="form-control" type="text" asp-for="Txt2_name"
+                                   placeholder="Field name" disabled>
+                        }
+                    </div>
+
+                    <div class="mb-3 col-4">
+                        @if (coll.Txt3_visibility)
+                        {
+                            <div class="form-check">
+                                <input checked class="form-check-input fieldVisib" type="checkbox"
+                                       asp-for="Txt3_visibility">
+                                <label class="form-check-label" asp-for="Txt3_visibility">Field 3</label>
+                            </div>
+                            <input required value="@coll.Txt3_name" class="form-control" type="text" asp-for="Txt3_name"
+                                   placeholder="Field name">
+                        }
+                        else
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input fieldVisib" type="checkbox" asp-for="Txt3_visibility">
+                                <label class="form-check-label" asp-for="Txt3_visibility">Field 3</label>
+                            </div>
+                            <input required value="@coll.Txt3_name" class="form-control" type="text" asp-for="Txt3_name"
+                                   placeholder="Field name" disabled>
+                        }
+                    </div>
+                </div>
+
+                <h5>Date fields</h5>
+                <div class="fields-group row">
+                    <div class="mb-3 col-4">
+                        @if (coll.Date1_visibility)
+                        {
+                            <div class="form-check">
+                                <input checked class="form-check-input fieldVisib" type="checkbox"
+                                       asp-for="Date1_visibility">
+                                <label class="form-check-label" asp-for="Date1_visibility">Field 1</label>
+                            </div>
+                            <input required value="@coll.Date1_name" class="form-control" type="text" asp-for="Date1_name"
+                                   placeholder="Field name">
+                        }
+                        else
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input fieldVisib" type="checkbox" asp-for="Date1_visibility">
+                                <label class="form-check-label" asp-for="Date1_visibility">Field 1</label>
+                            </div>
+                            <input required value="@coll.Date1_name" class="form-control" type="text" asp-for="Date1_name"
+                                   placeholder="Field name" disabled>
+                        }
+                    </div>
+
+                    <div class="mb-3 col-4">
+                        @if (coll.Date2_visibility)
+                        {
+                            <div class="form-check">
+                                <input checked class="form-check-input fieldVisib" type="checkbox"
+                                       asp-for="Date2_visibility">
+                                <label class="form-check-label" asp-for="Date2_visibility">Field 2</label>
+                            </div>
+                            <input required value="@coll.Date2_name" class="form-control" type="text" asp-for="Date2_name"
+                                   placeholder="Field name">
+                        }
+                        else
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input fieldVisib" type="checkbox" asp-for="Date2_visibility">
+                                <label class="form-check-label" asp-for="Date2_visibility">Field 2</label>
+                            </div>
+                            <input required value="@coll.Date2_name" class="form-control" type="text" asp-for="Date2_name"
+                                   placeholder="Field name" disabled>
+                        }
+                    </div>
+
+                    <div class="mb-3 col-4">
+                        @if (coll.Date3_visibility)
+                        {
+                            <div class="form-check">
+                                <input checked class="form-check-input fieldVisib" type="checkbox"
+                                       asp-for="Date3_visibility">
+                                <label class="form-check-label" asp-for="Date3_visibility">Field 3</label>
+                            </div>
+                            <input required value="@coll.Date3_name" class="form-control" type="text" asp-for="Date3_name"
+                                   placeholder="Field name">
+                        }
+                        else
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input fieldVisib" type="checkbox" asp-for="Date3_visibility">
+                                <label class="form-check-label" asp-for="Date3_visibility">Field 3</label>
+                            </div>
+                            <input required value="@coll.Date3_name" class="form-control" type="text" asp-for="Date3_name"
+                                   placeholder="Field name" disabled>
+                        }
+                    </div>
+                </div>
+
+                <h5>Checkbox fields</h5>
+                <div class="fields-group row">
+                    <div class="mb-3 col-4">
+                        @if (coll.Check1_visibility)
+                        {
+                            <div class="form-check">
+                                <input checked class="form-check-input fieldVisib" type="checkbox"
+                                       asp-for="Check1_visibility">
+                                <label class="form-check-label" asp-for="Check1_visibility">Field 1</label>
+                            </div>
+                            <input required value="@coll.Check1_name" class="form-control" type="text" asp-for="Check1_name"
+                                   placeholder="Field name">
+                        }
+                        else
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input fieldVisib" type="checkbox" asp-for="Check1_visibility">
+                                <label class="form-check-label" asp-for="Check1_visibility">Field 1</label>
+                            </div>
+                            <input required value="@coll.Check1_name" class="form-control" type="text" asp-for="Check1_name"
+                                   placeholder="Field name" disabled>
+                        }
+                    </div>
+
+                    <div class="mb-3 col-4">
+                        @if (coll.Check2_visibility)
+                        {
+                            <div class="form-check">
+                                <input checked class="form-check-input fieldVisib" type="checkbox"
+                                       asp-for="Check2_visibility">
+                                <label class="form-check-label" asp-for="Check2_visibility">Field 2</label>
+                            </div>
+                            <input required value="@coll.Check2_name" class="form-control" type="text" asp-for="Check2_name"
+                                   placeholder="Field name">
+                        }
+                        else
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input fieldVisib" type="checkbox" asp-for="Check2_visibility">
+                                <label class="form-check-label" asp-for="Check2_visibility">Field 2</label>
+                            </div>
+                            <input required value="@coll.Check2_name" class="form-control" type="text" asp-for="Check2_name"
+                                   placeholder="Field name" disabled>
+                        }
+                    </div>
+
+                    <div class="mb-3 col-4">
+                        @if (coll.Check3_visibility)
+                        {
+                            <div class="form-check">
+                                <input checked class="form-check-input fieldVisib" type="checkbox"
+                                       asp-for="Check3_visibility">
+                                <label class="form-check-label" asp-for="Check3_visibility">Field 3</label>
+                            </div>
+                            <input required value="@coll.Check3_name" class="form-control" type="text" asp-for="Check3_name"
+                                   placeholder="Field name">
+                        }
+                        else
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input fieldVisib" type="checkbox" asp-for="Check3_visibility">
+                                <label class="form-check-label" asp-for="Check3_visibility">Field 3</label>
+                            </div>
+                            <input required value="@coll.Check3_name" class="form-control" type="text" asp-for="Check3_name"
+                                   placeholder="Field name" disabled>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-footer text-end">
+                <a class="btn btn-secondary" asp-controller="Collections" asp-action="ColManager">Cancel</a>
+                <input type="submit" class="btn btn-dark" value="Save" />
+            </div>
+        </form>
+    </div>
+
+    <div class="items-edit">
+        <hr>
+        <h4>Items</h4>
+
+        @if (coll.Items.Count() == 0)
+        {
+            <div class="empty my-5 text-center">
+                <h4>You haven't created a collection yet.</h4>
+                <p>Click <strong>Add Collection</strong> to create new one.</p>
+            </div>
+        }
+        else
+        {
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Tags</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in coll.Items)
+                    {
+                        <tr>
+                            <th>@item.Name</th>
+                            <td>@item.Tags</td>
+                            <td>
+                                <a>Edit</a> | 
+                                @Html.ActionLink("Delete", "DeleteItem", "Collections", new { item.Id }, new
+                            { @class = "" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@section Scripts {
+<script>
+
+    var simplemde = new SimpleMDE({ element: $('#descripArea')[0] });
+
+    simplemde.value("@coll.Descrip");
+    simplemde.codemirror.on("change", function () {
+        $('#descripArea').val(simplemde.value());
+    });
+
+    $('.fieldVisib').on("change", function () {
+        if (this.checked)
+            $(this).parent().next().prop('disabled', false);
+        else
+            $(this).parent().next().prop('disabled', true);
+    })
+
+    var forms = document.querySelectorAll('.needs-validation')
+
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+</script>
+}

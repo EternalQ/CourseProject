@@ -9,6 +9,7 @@ namespace CourseProject.ViewModels
 {
     public class EditCollectionViewModel
     {
+        public string CollId { get; set; }
         public string CollectionName { get; set; }
         public string Description { get; set; }
         public string Subject { get; set; }
