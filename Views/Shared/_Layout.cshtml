@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - CourseProject</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="//cdn.datatables.net/1.11.0/css/jquery.dataTables.min.css"></link>
     <link href="~/css/simplemde.min.css" rel="stylesheet" />
+    <link href="~/lib/tags/dist/bootstrap-tagsinput.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 
@@ -17,7 +19,7 @@
                 <a class="navbar-brand" asp-area="" asp-controller="Collections" asp-action="Index">Collections</a>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -36,11 +38,11 @@
                             }
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account"
-                                asp-action="AccManager">Account</a>
+                                   asp-action="AccManager">Account</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account"
-                                asp-action="Logout">Logout</a>
+                                   asp-action="Logout">Logout</a>
                             </li>
                         }
                         else
@@ -50,8 +52,10 @@
                             new { @class = "nav-link text-dark" })
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Signup">Sign
-                                    Up</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Signup">
+                                    Sign
+                                    Up
+                                </a>
                             </li>
                         }
                     </ul>
@@ -62,8 +66,8 @@
     <div class="container">
         <main role="main" class="pb-3">
             @* searcher and viewbag *@
-                @RenderBody()
-            
+            @RenderBody()
+
         </main>
     </div>
 
@@ -75,6 +79,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/simplemde.min.js"></script>
+    <script src="~/lib/tags/dist/bootstrap-tagsinput.min.js"></script>
+    <script src="//cdn.datatables.net/1.11.0/js/jquery.dataTables.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>

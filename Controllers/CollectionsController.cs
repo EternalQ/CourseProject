@@ -146,7 +146,7 @@ namespace CourseProject.Controllers
         public async Task<IActionResult> EditCollection(EditCollectionViewModel model)
         {
             IUser user = await userMgr.FindByNameAsync(User.Identity.Name);
-            
+
             if (ModelState.IsValid)
             {
                 CustomCollection collection = await db.CustomCollections.FirstOrDefaultAsync(c => c.Id == model.CollId);
@@ -204,6 +204,63 @@ namespace CourseProject.Controllers
             else
                 ModelState.AddModelError("", "Smth went wrong");
             return View(model);
+        }
+
+        public async Task<IActionResult> AddItem(EditCollectionViewModel model)
+        {
+            IUser user = await userMgr.FindByNameAsync(User.Identity.Name);
+
+            if (ModelState.IsValid)
+            {
+                CustomItem item = new CustomItem()
+                {
+                    Name = model.ItemName,
+                    Tags = model.Tags,
+
+                    Num1 = model.Num1,
+                    Num2 = model.Num2,
+                    Num3 = model.Num3,
+                    Check1 = model.Check1,
+                    Check2 = model.Check2,
+                    Check3 = model.Check3,
+                    Date1 = model.Date1,
+                    Date2 = model.Date2,
+                    Date3 = model.Date3,
+                    Str1 = model.Str1,
+                    Str2 = model.Str2,
+                    Str3 = model.Str3,
+                    Txt1 = model.Txt1,
+                    Txt2 = model.Txt2,
+                    Txt3 = model.Txt3,
+                };
+
+                var Coll = await db.CustomCollections.Include(c => c.Items).SingleOrDefaultAsync(c => c.Id == model.CollId);
+                Coll.Items.Add(item);
+                await db.SaveChangesAsync();
+            }
+            return RedirectToAction("EditCollection");
+        }
+
+        public async Task<IActionResult> OpenItem(string id)
+        {
+            var item = await db.CustomItems.FirstOrDefaultAsync(i => i.Id == id);
+            return View(item);
+        }
+
+        public async Task<IActionResult> DeleteItem(string id)
+        {
+            var user = await userMgr.FindByNameAsync(User.Identity.Name);
+            var item = await db.CustomItems.FirstOrDefaultAsync(i => i.Id == id);
+            var collection = await db.CustomCollections.Include(c => c.Items).SingleOrDefaultAsync(c => c.Id == item.CollectionId);
+            if (user.Id != collection.UserId)
+            {
+                return RedirectToAction("AccessDenied", "Account");
+            }
+
+            collection.Items.Remove(item);
+            await db.SaveChangesAsync();
+
+            return RedirectToAction("EditCollection");
         }
 
         [AllowAnonymous]

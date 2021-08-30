@@ -9,6 +9,7 @@ namespace CourseProject.Models.Entities
     {
         public CustomItem() 
         {
+            AddingDate = DateTime.Now;
             Collection = new CustomCollection();
             Comments = new List<Comment>();
         }
@@ -17,6 +18,7 @@ namespace CourseProject.Models.Entities
         {
             Name = name;
             Tags = tags;
+            AddingDate = DateTime.Now;
             Collection = new CustomCollection();
             Comments = new List<Comment>();
         }
@@ -25,10 +27,12 @@ namespace CourseProject.Models.Entities
         public string Name { get; set; }
         public string Tags { get; set; }
         public int Likes { get; set; }
+        public DateTime AddingDate { get; set; }
 
         public string CollectionId { get; set; }
         public CustomCollection Collection { get; set; }
         public List<Comment> Comments { get; set; }
+        public string UserId { get => Collection.UserId; }
 
         public int Num1 { get; set; }
         public int Num2 { get; set; }

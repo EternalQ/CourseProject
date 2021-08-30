@@ -1,7 +1,11 @@
-﻿@model EditCollectionViewModel
+﻿@using System.Reflection;
+@model EditCollectionViewModel
 @{
     var db = ViewBag.Context as AppDbContext;
     var coll = ViewBag.Collection as CustomCollection;
+    var type = coll.GetType();
+    var flag = false;
+    string itype = "";
 }
 
 <div class="col-9">
@@ -43,8 +47,7 @@
                 <div class="mb-3">
                     <div class="mb-3">
                         <label class="form-label" asp-for="File" id="fileInpLabel">
-                            Drop file here or click to upload new
-                            image
+                            Drop file here or click to upload new image
                         </label>
                         <input accept="image/png, image/jpeg, image/jpg" class="form-control" type="file"
                                asp-for="File" id="fileInp">
@@ -411,16 +414,86 @@
         <hr>
         <h4>Items</h4>
 
+        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addFormModal">Add Item</button>
+
+        <div class="modal fade" id="addFormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form method="post" asp-action="AddItem" asp-controller="Collections" class="needs-validation" novalidate>
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h5>Item name</h5>
+                            <div class="mb-3">
+                                <input required class="form-control" type="text" asp-for="ItemName">
+                            </div>
+                            <h5>Tags</h5>
+                            <div class="mb-3">
+                                <input data-role="tagsinput" required class="form-control" type="text" asp-for="Tags">
+                            </div>
+                            @foreach (var prop in type.GetProperties())
+                            {
+                                @if (prop.Name.Contains("_vi") && (bool)prop.GetValue(coll, null))
+                                {
+                                    flag = true;
+                                }
+
+                                @if (flag && prop.Name.Contains("_name"))
+                                {
+                                    flag = false;
+                                    itype = prop.Name.Substring(0, prop.Name.IndexOf('_') - 1);
+                                    var propName = prop.Name.Substring(0, prop.Name.IndexOf('_'));
+                                    <h5 class="prop-value">@(prop.GetValue(coll, null))</h5>
+                                    <div class="mb-3">
+                                        @switch (itype)
+                                        {
+                                            case "Num":
+                                                <input required class="form-control" type="number" min="0" step="1" id="@propName" name="@propName" placeholder="Smth...">
+                                                break;
+                                            case "Str":
+                                                <input required class="form-control" type="text" id="@propName" name="@propName" placeholder="Smth...">
+                                                break;
+                                            case "Txt":
+                                                <textarea required class="form-control item-mde" type="text" id="@propName" name="@propName" placeholder="Smth..."></textarea>
+                                                break;
+                                            case "Date":
+                                                <input required class="form-control" type="date" id="@propName" name="@propName" placeholder="Smth...">
+                                                break;
+                                            case "Check":
+                                                <div class="form-check">
+                                                    <input required class="form-check-input" type="checkbox" id="@propName" name="@propName" placeholder="Smth...">
+                                                    <label class="form-check-label" for="@propName">@prop.Name</label>
+                                                </div>
+                                                break;
+                                            default:
+                                                break;
+                                        }
+
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-dark" value="Add item" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         @if (coll.Items.Count() == 0)
         {
             <div class="empty my-5 text-center">
-                <h4>You haven't created a collection yet.</h4>
-                <p>Click <strong>Add Collection</strong> to create new one.</p>
+                <h4>No items.</h4>
+                <p>Click <strong>Add Item</strong> to create new one.</p>
             </div>
         }
         else
         {
-            <table class="table table-bordered table-striped">
+            <table id="ItemTable" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -435,9 +508,9 @@
                             <th>@item.Name</th>
                             <td>@item.Tags</td>
                             <td>
-                                <a>Edit</a> | 
-                                @Html.ActionLink("Delete", "DeleteItem", "Collections", new { item.Id }, new
-                            { @class = "" })
+                                @Html.ActionLink("Open", "OpenItem", "Collections", new { item.Id }, new { @class = "link-primary" }) |
+                                <a class="link-secondary disabled">Edit</a> |
+                                @Html.ActionLink("Delete", "DeleteItem", "Collections", new { item.Id }, new { @class = "link-danger" })
                             </td>
                         </tr>
                     }
@@ -448,7 +521,10 @@
 </div>
 
 @section Scripts {
-<script>
+    <script>
+    $("#ItemTable").DataTable({
+        "scrollY": "90vh"
+    })
 
     var simplemde = new SimpleMDE({ element: $('#descripArea')[0] });
 
@@ -477,5 +553,5 @@
                 form.classList.add('was-validated')
             }, false)
         })
-</script>
+    </script>
 }
